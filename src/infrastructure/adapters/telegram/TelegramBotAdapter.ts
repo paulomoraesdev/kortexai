@@ -6,7 +6,7 @@ import Logger from '@/shared/helpers/Logger';
 
 export default class TelegramBotAdapter implements BotAdapter {
   private config: TelegramConfigs;
-  private botInstance: any = null;
+  private botInstance: TelegramBot | null = null;
 
   constructor() {
     this.config = Config.getInstance().getTelegramConfig();
@@ -33,9 +33,9 @@ export default class TelegramBotAdapter implements BotAdapter {
   private registerListeners(): void {
     if (!this.botInstance) return;
 
-    this.botInstance.onText(/\/ping/, (msg: any) => {
+    this.botInstance?.onText(/\/ping/, (msg: any) => {
       this.handleMessage(msg, (m: any) => {
-        this.botInstance.sendMessage(
+        this.botInstance?.sendMessage(
           m.chat.id, 
           '🏓 Pong! Bot está funcionando no seu localhost!'
         );
