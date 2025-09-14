@@ -34,12 +34,17 @@ export default class TelegramBotAdapter implements BotAdapter {
     if (!this.botInstance) return;
 
     this.botInstance.onText(/\/ping/, (msg: any) => {
-      if (!this.isAuthorizedChat(msg.chat.id)) return;
-      this.botInstance.sendMessage(msg.chat.id, '🏓 Pong! Bot está funcionando no seu localhost!');
+      this.handleMessage(msg, (m: any) => {
+        this.botInstance.sendMessage(
+          m.chat.id, 
+          '🏓 Pong! Bot está funcionando no seu localhost!'
+        );
+      });
     });
   }
 
-  private isAuthorizedChat(chatId: number): boolean {
-    return chatId.toString() === this.config.chatId;
+  private handleMessage(msg: any, callback: Function): void {
+    if (msg.chat.id.toString() !== this.config.chatId) return;
+    callback(msg);
   }
 }
